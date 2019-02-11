@@ -2,16 +2,20 @@
   <div>
     {{ msg }}
     <form>
-      <button>add task</button>
-      <button>delete finished task</button>
-      <p>input: <input type="text"></p>
-      <p>task</p>
+      <button @click="addTodo()">add task</button>
+      <button @click="removeTodo()">delete finished tasks</button>
+      <p>input: <input type="text" v-model="newTodo"></p>
+      <p>task: {{ newTodo }}</p>
     </form>
     <div class="task-list">
-      <label class="task-list__item"><input type="checkbox"><button>edit</button>vue-router</label>
-      <label class="task-list__item"><input type="checkbox"><button>EDIT</button>vuex</label>
-      <label class="task-list__item"><input type="checkbox"><button>EDIT</button>vue-loader</label>
-      <label class="task-list__item--checked"><input type="checkbox" checked><button>EDIT</button>awesome-vue</label>
+      <label class="task-list__item"
+              v-for="todo in todos" :key="todo"
+              v-bind:class="{ 'task-list__item--checked': todo.done}">
+        <input type="checkbox" v-model="todo.done">
+        <input type="checkbox" v-model="todo.editing">
+        <input v-if="todo.editing" v-model="todo.text" @keyup.enter="todo.editing = !todo.editing">
+        <span v-else>{{ todo.text }}</span>
+      </label>
     </div>
   </div>
 </template>
@@ -19,9 +23,35 @@
 <script>
 export default {
   name: 'hello',
-  data() {
+  data: function() {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      todos : [
+        {text : 'vue-router', done: false, editing: false},
+        {text : 'vuex', done: false, editing: false},
+        {text : 'vue-loader', done: false, editing: false},
+        {text : 'awesome-vue', done: false, editing: false},
+      ],
+      newTodo: ""
+    }
+  },
+  methods: {
+    addTodo: function(event) {
+      let text = this.newTodo && this.newTodo.trim()
+      if (!text) {
+        return
+      }
+      this.todos.push({
+        text: text,
+        done: false,
+        editing: false
+      })
+      this.newTodo = ''
+    }
+  },
+  removeTodo: function(event) {
+    for (let i = this.todos.length -1; i >=0; i--) {
+      if (this.todos[i].done) this.todos.splice(i, 1)
     }
   }
 }
@@ -52,119 +82,3 @@ export default {
 }
 </style>
 
-
-<!--
-<template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li>
-        <a
-          href="https://vuejs.org"
-          target="_blank"
-        >
-          Core Docs
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://forum.vuejs.org"
-          target="_blank"
-        >
-          Forum
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://chat.vuejs.org"
-          target="_blank"
-        >
-          Community Chat
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://twitter.com/vuejs"
-          target="_blank"
-        >
-          Twitter
-        </a>
-      </li>
-      <br>
-      <li>
-        <a
-          href="http://vuejs-templates.github.io/webpack/"
-          target="_blank"
-        >
-          Docs for This Template
-        </a>
-      </li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li>
-        <a
-          href="http://router.vuejs.org/"
-          target="_blank"
-        >
-          vue-router
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vuex.vuejs.org/"
-          target="_blank"
-        >
-          vuex
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vue-loader.vuejs.org/"
-          target="_blank"
-        >
-          vue-loader
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-        >
-          awesome-vue
-        </a>
-      </li>
-    </ul>
-  </div>
-</template>
-
-<script>
-export default {
-  name: 'HelloWorld',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
-    }
-  }
-}
-</script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
--->
