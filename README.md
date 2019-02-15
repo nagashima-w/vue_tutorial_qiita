@@ -1,6 +1,7 @@
 # vue_tutorial_qiita
 - [この記事](https://qiita.com/sin_tanaka/items/29769266b3b078ea0f7c)を見ながらやってみるリポジトリ
 - リポジトリ作成時点ではvueのバージョンが一致していないが、頑張って3系でもやっていく気持ちがある
+- 2019/02/11 写経が終わったので一旦完了
 
 > A Vue.js project
 
